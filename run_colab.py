@@ -1,4 +1,4 @@
-# run_colab.py - Colab-friendly script (no display() usage)
+# run_colab.py - Colab-friendly script (no display() usage, defensive shapes)
 SYMBOL = "RELIANCE"
 START = "2023-01-01"
 END = "2024-12-31"
@@ -32,9 +32,21 @@ def main():
     save_model(model, f"{SYMBOL}_model.pkl")
     print("Saved model:", f"{SYMBOL}_model.pkl")
 
-    # print last 10 rows of actual vs predicted
-    comp = pd.DataFrame({"Actual": y_test.values[-10:], "Pred": preds[-10:]})
-    print(comp.tail(10).to_string(index=False))
+    # Defensive preparation for printing (ensure 1-D and same length)
+    actual_arr = np.asarray(y_test.values[-10:]).ravel()
+    pred_arr   = np.asarray(preds[-10:]).ravel()
+
+    # Align sizes
+    minlen = min(len(actual_arr), len(pred_arr))
+    actual_arr = actual_arr[-minlen:]
+    pred_arr   = pred_arr[-minlen:]
+
+    comp = pd.DataFrame({
+        "Actual": actual_arr,
+        "Pred":   pred_arr
+    })
+    print("\nLast predictions vs actuals:")
+    print(comp.to_string(index=False))
 
 if __name__ == "__main__":
     main()
