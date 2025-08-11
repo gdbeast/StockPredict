@@ -5,6 +5,8 @@ import numpy as np
 import joblib
 
 def train_hybrid_model(X_train, y_train):
+    if hasattr(y_train, "ravel"):
+        y_train = np.ravel(y_train)
     lr = LinearRegression()
     rf = RandomForestRegressor(n_estimators=100, random_state=42)
     stack = StackingRegressor(estimators=[('lr', lr), ('rf', rf)],
