@@ -20,6 +20,7 @@ def train_hybrid_model(X_train, y_train):
 
 def evaluate_model(model, X_test, y_test):
     preds = model.predict(X_test)
+    preds = np.asarray(preds).ravel()
     mse = mean_squared_error(y_test, preds)
     rmse = np.sqrt(mse)
     return rmse, preds
