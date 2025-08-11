@@ -1,3 +1,4 @@
+
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor, StackingRegressor
 from sklearn.metrics import mean_squared_error
@@ -7,10 +8,13 @@ import joblib
 def train_hybrid_model(X_train, y_train):
     if hasattr(y_train, "ravel"):
         y_train = np.ravel(y_train)
+
     lr = LinearRegression()
     rf = RandomForestRegressor(n_estimators=100, random_state=42)
-    stack = StackingRegressor(estimators=[('lr', lr), ('rf', rf)],
-                              final_estimator=LinearRegression())
+    stack = StackingRegressor(
+        estimators=[('lr', lr), ('rf', rf)],
+        final_estimator=LinearRegression()
+    )
     stack.fit(X_train, y_train)
     return stack
 
